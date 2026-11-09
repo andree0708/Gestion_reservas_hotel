@@ -6,6 +6,18 @@ import { CardModule } from 'primeng/card';
 import { RatingModule } from 'primeng/rating';
 import { FormsModule } from '@angular/forms';
 
+/** Representa la opinión de un huésped en la sección de testimonios */
+interface Testimonio {
+  nombre: string;
+  comentario: string;
+  rating: number;
+}
+
+/**
+ * HomeComponent — Página de inicio
+ * Muestra el hero banner con llamadas a la acción
+ * y la sección de opiniones de huéspedes.
+ */
 @Component({
   selector: 'app-home',
   imports: [RouterLink, ButtonModule, CommonModule, CardModule, RatingModule, FormsModule],
@@ -13,7 +25,8 @@ import { FormsModule } from '@angular/forms';
   styleUrl: './home.component.css'
 })
 export class HomeComponent {
-  testimonios = [
+  /** Lista de testimonios de huéspedes mostrados en la sección de opiniones */
+  testimonios: Testimonio[] = [
     {
       nombre: 'Maria González',
       comentario: '¡Una experiencia increíble! El servicio fue excepcional y la habitación muy cómoda. Definitivamente volveré.',
