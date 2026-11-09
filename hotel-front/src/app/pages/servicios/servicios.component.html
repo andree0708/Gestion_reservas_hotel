@@ -1,0 +1,17 @@
+<div class="servicios-container">
+  <div class="servicios-section">
+    <h1 class="section-title">Servicios Adicionales</h1>
+    <p class="section-subtitle">Aprovecha nuestros excelentes servicios durante tu estancia.</p>
+
+    <!--
+      El padre itera el array y pasa cada servicio al componente hijo.
+      ServicioCardComponent solo muestra la información — sin lógica adicional.
+    -->
+    <div class="servicios-grid">
+      <app-servicio-card
+        *ngFor="let servicio of servicios"
+        [servicio]="servicio">
+      </app-servicio-card>
+    </div>
+  </div>
+</div>

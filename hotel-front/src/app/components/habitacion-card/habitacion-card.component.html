@@ -1,0 +1,66 @@
+<p-card class="room-card">
+  <!-- Imagen / cabecera de la card -->
+  <ng-template pTemplate="header">
+    <div class="room-image"
+         [style.background-image]="habitacion.imagenUrl ? 'url(' + habitacion.imagenUrl + ')' : 'none'">
+      <p-tag [value]="habitacion.tag"
+             [severity]="habitacion.tagSeverity"
+             class="room-tag">
+      </p-tag>
+      <div class="room-placeholder" *ngIf="!habitacion.imagenUrl">
+        {{ habitacion.nombre }}
+      </div>
+    </div>
+  </ng-template>
+
+  <!-- Cuerpo -->
+  <div class="room-content">
+    <h3 class="room-title">{{ habitacion.nombre }}</h3>
+    <p class="room-description">{{ habitacion.descripcion }}</p>
+    <p class="room-price">Desde ${{ habitacion.precio | number:'1.2-2' }} / noche</p>
+  </div>
+
+  <!-- Acciones -->
+  <ng-template pTemplate="footer">
+    <div class="room-actions">
+      <p-button label="Ver detalles"
+                (onClick)="onVerDetalles()"
+                styleClass="details-button"
+                [text]="true">
+      </p-button>
+      <p-button label="Reservar"
+                (onClick)="onReservar()"
+                styleClass="reserve-room-button">
+      </p-button>
+    </div>
+  </ng-template>
+</p-card>
+
+<!-- Dialog de detalles — autónomo dentro del componente -->
+<p-dialog [(visible)]="detalleVisible"
+          [modal]="true"
+          [style]="{width: '450px'}"
+          [header]="habitacion.nombre">
+  <div class="detalle-content">
+    <p class="detalle-descripcion">{{ habitacion.descripcion }}</p>
+    <p class="detalle-precio">
+      <strong>Precio por noche:</strong> ${{ habitacion.precio | number:'1.2-2' }}
+    </p>
+    <p class="detalle-capacidad">
+      <strong>Capacidad:</strong> {{ habitacion.capacidad }} persona(s)
+    </p>
+    <p class="detalle-tipo">
+      <strong>Tipo:</strong> {{ habitacion.tipo }}
+    </p>
+  </div>
+  <ng-template pTemplate="footer">
+    <p-button label="Cerrar"
+              (onClick)="detalleVisible = false"
+              [text]="true">
+    </p-button>
+    <p-button label="Reservar"
+              (onClick)="onReservar(); detalleVisible = false"
+              styleClass="reserve-room-button">
+    </p-button>
+  </ng-template>
+</p-dialog>

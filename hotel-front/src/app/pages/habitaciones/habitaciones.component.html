@@ -1,0 +1,22 @@
+<p-toast></p-toast>
+
+<div class="habitaciones-container">
+  <div class="header-section">
+    <h1 class="main-title">Nuestras Habitaciones</h1>
+    <p class="subtitle">Explora nuestras opciones de habitaciones disponibles.</p>
+  </div>
+
+  <!--
+    El padre (HabitacionesComponent) itera y pasa cada habitación al hijo.
+    El hijo (HabitacionCardComponent) se encarga de todo lo visual.
+    Los eventos del hijo suben al padre via (reservar) y (verDetalles).
+  -->
+  <div class="rooms-grid">
+    <app-habitacion-card
+      *ngFor="let habitacion of habitaciones"
+      [habitacion]="habitacion"
+      (reservar)="onReservar($event)"
+      (verDetalles)="onVerDetalles($event)">
+    </app-habitacion-card>
+  </div>
+</div>

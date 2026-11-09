@@ -1,0 +1,23 @@
+# Dependencias
+node_modules/
+
+# Build outputs
+dist/
+.angular/cache/
+
+# Entornos
+.env
+*.env.local
+
+# Sistema operativo
+.DS_Store
+Thumbs.db
+
+# IDEs
+.vscode/
+.idea/
+
+# Imágenes temporales en raíz (ya movidas a docs/mockups/)
+inicio.png
+inicio2.png
+inicio3.png
