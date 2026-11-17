@@ -1,22 +1,82 @@
-<p-toast></p-toast>
+<div class="hab-page">
+  <p-toast></p-toast>
 
-<div class="habitaciones-container">
-  <div class="header-section">
-    <h1 class="main-title">Nuestras Habitaciones</h1>
-    <p class="subtitle">Explora nuestras opciones de habitaciones disponibles.</p>
-  </div>
+  <!-- Encabezado -->
+  <section class="hab-hero">
+    <div class="container-x">
+      <span class="eyebrow eyebrow-claro">Habitaciones & Suites</span>
+      <h1>Encuentra tu rincón<br><em>del Caribe</em></h1>
+      <p>Seis espacios únicos, del refugio íntimo a la suite presidencial con piscina privada.</p>
+    </div>
+  </section>
 
-  <!--
-    El padre (HabitacionesComponent) itera y pasa cada habitación al hijo.
-    El hijo (HabitacionCardComponent) se encarga de todo lo visual.
-    Los eventos del hijo suben al padre via (reservar) y (verDetalles).
-  -->
-  <div class="rooms-grid">
-    <app-habitacion-card
-      *ngFor="let habitacion of habitaciones"
-      [habitacion]="habitacion"
-      (reservar)="onReservar($event)"
-      (verDetalles)="onVerDetalles($event)">
-    </app-habitacion-card>
+  <div class="container-x hab-layout">
+    <!-- Filtros -->
+    <aside class="filtros">
+      <div class="filtros-cabeza">
+        <h3><i class="pi pi-filter"></i> Filtros</h3>
+        <button (click)="limpiar()">Limpiar</button>
+      </div>
+
+      <div class="f-buscar">
+        <i class="pi pi-search"></i>
+        <input type="text" placeholder="Buscar: jacuzzi, balcón, familiar…" [(ngModel)]="busqueda" (ngModelChange)="aplicarFiltros()">
+      </div>
+
+      <div class="f-grupo">
+        <label>Tipo de habitación</label>
+        <div class="chips">
+          <button *ngFor="let t of tipos" [class.on]="tipoSel === t" (click)="tipoSel = t; aplicarFiltros()">{{ t }}</button>
+        </div>
+      </div>
+
+      <div class="f-grupo">
+        <label>Huéspedes: <strong>{{ huespedesMin }}+</strong></label>
+        <input type="range" min="1" max="6" [(ngModel)]="huespedesMin" (ngModelChange)="aplicarFiltros()">
+      </div>
+
+      <div class="f-grupo">
+        <label>Precio máx: <strong>${{ precioMax }}</strong> / noche</label>
+        <input type="range" min="80" max="700" step="10" [(ngModel)]="precioMax" (ngModelChange)="aplicarFiltros()">
+      </div>
+
+      <label class="f-check">
+        <input type="checkbox" [(ngModel)]="soloOfertas" (ngModelChange)="aplicarFiltros()">
+        <span><i class="pi pi-tag"></i> Solo ofertas</span>
+      </label>
+
+      <div class="f-grupo">
+        <label>Ordenar por</label>
+        <select [(ngModel)]="orden" (ngModelChange)="aplicarFiltros()">
+          <option value="recomendado">Recomendado</option>
+          <option value="precio-asc">Menor precio</option>
+          <option value="precio-desc">Mayor precio</option>
+          <option value="rating">Mejor valoradas</option>
+        </select>
+      </div>
+    </aside>
+
+    <!-- Resultados -->
+    <div class="resultados">
+      <p class="conteo"><strong>{{ filtradas.length }}</strong> {{ filtradas.length === 1 ? 'habitación encontrada' : 'habitaciones encontradas' }}</p>
+
+      <div class="rooms-grid" *ngIf="filtradas.length; else vacio">
+        <app-habitacion-card
+          *ngFor="let h of filtradas"
+          [habitacion]="h"
+          (reservar)="onReservar($event)"
+          (verDetalles)="onVerDetalles($event)">
+        </app-habitacion-card>
+      </div>
+
+      <ng-template #vacio>
+        <div class="vacio">
+          <i class="pi pi-search"></i>
+          <h3>Sin resultados con esos filtros</h3>
+          <p>Prueba ampliando el precio o quitando alguna condición.</p>
+          <button class="btn-lujo btn-selva" (click)="limpiar()">Ver todas</button>
+        </div>
+      </ng-template>
+    </div>
   </div>
 </div>
