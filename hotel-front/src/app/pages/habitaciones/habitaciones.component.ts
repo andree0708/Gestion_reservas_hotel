@@ -1,116 +1,72 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
+import { Router } from '@angular/router';
 import { HabitacionCardComponent } from '../../components/habitacion-card/habitacion-card.component';
-import { Habitacion, HabitacionConTag } from '../../models/habitacion.model';
+import { HabitacionConTag } from '../../models/habitacion.model';
+import { HABITACIONES_DATA, mapearHabitaciones } from '../../data/hotel.data';
 
-/**
- * HabitacionesComponent — Componente padre (smart component)
- * ─────────────────────────────────────────────────────────────────
- * Responsabilidades:
- *  1. Proveer los datos (mock por ahora — reemplaza con HTTP cuando conectes backend)
- *  2. Mapear Habitacion → HabitacionConTag (agrega tag visual)
- *  3. Pasar cada item a <app-habitacion-card> via @Input
- *  4. Escuchar los @Output del hijo: (reservar) y (verDetalles)
- *  5. Decidir qué hacer con el evento (mostrar toast, navegar, etc.)
- * ─────────────────────────────────────────────────────────────────
- */
+type Orden = 'recomendado' | 'precio-asc' | 'precio-desc' | 'rating';
+
 @Component({
   selector: 'app-habitaciones',
-  imports: [CommonModule, HabitacionCardComponent, ToastModule],
+  imports: [CommonModule, FormsModule, HabitacionCardComponent, ToastModule],
   templateUrl: './habitaciones.component.html',
   styleUrl: './habitaciones.component.css',
   providers: [MessageService]
 })
 export class HabitacionesComponent implements OnInit {
-  habitaciones: HabitacionConTag[] = [];
+  todas: HabitacionConTag[] = [];
+  filtradas: HabitacionConTag[] = [];
 
-  constructor(private messageService: MessageService) {}
+  // Filtros
+  busqueda = '';
+  tipoSel = 'Todos';
+  huespedesMin = 1;
+  precioMax = 700;
+  soloOfertas = false;
+  orden: Orden = 'recomendado';
+
+  tipos = ['Todos', 'Individual', 'Doble', 'Familiar', 'Suite', 'Presidencial'];
+
+  constructor(private messageService: MessageService, private router: Router) {}
 
   ngOnInit(): void {
-    // ─── DATOS MOCK ───────────────────────────────────────────────
-    // Cuando conectes el backend, reemplaza este bloque con una
-    // llamada a tu servicio HTTP y llama a this.mapearHabitaciones(data)
-    const dataMock: Habitacion[] = [
-      {
-        id: 1,
-        nombre: 'Habitación Doble',
-        tipo: 'Doble',
-        descripcion: 'Hasta 4 personas, cama doble, escritorio y balcón con vista al jardín.',
-        precio: 150,
-        capacidad: 4,
-        disponible: true,
-        imagenUrl: 'https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=400&h=300&fit=crop'
-      },
-      {
-        id: 2,
-        nombre: 'Suite Presidencial',
-        tipo: 'Suite',
-        descripcion: 'Suite de lujo con vista panorámica al mar, jacuzzi privado y servicio VIP las 24 horas.',
-        precio: 300,
-        capacidad: 2,
-        disponible: true,
-        imagenUrl: 'https://images.unsplash.com/photo-1618773928121-c32242e63f39?w=400&h=300&fit=crop'
-      },
-      {
-        id: 3,
-        nombre: 'Habitación Individual',
-        tipo: 'Individual',
-        descripcion: 'Habitación acogedora ideal para viajeros individuales, incluye desayuno.',
-        precio: 80,
-        capacidad: 1,
-        disponible: true,
-        imagenUrl: 'https://images.unsplash.com/photo-1505693314120-0d443867891c?w=400&h=300&fit=crop'
-      },
-      {
-        id: 4,
-        nombre: 'Habitación Familiar',
-        tipo: 'Familiar',
-        descripcion: 'Espaciosa habitación para toda la familia con dos camas dobles y zona de juegos.',
-        precio: 200,
-        capacidad: 6,
-        disponible: true,
-        imagenUrl: 'https://images.unsplash.com/photo-1596701062351-8ac031a0a713?w=400&h=300&fit=crop'
-      }
-    ];
-
-    this.habitaciones = this.mapearHabitaciones(dataMock);
+    this.todas = mapearHabitaciones(HABITACIONES_DATA);
+    this.aplicarFiltros();
   }
 
-  /**
-   * Agrega las propiedades visuales (tag, tagSeverity) según el tipo de habitación.
-   * Centralizado aquí para que HabitacionCardComponent no necesite conocer esta lógica.
-   */
-  private mapearHabitaciones(data: Habitacion[]): HabitacionConTag[] {
-    return data.map(h => ({
-      ...h,
-      tag: h.tipo === 'Suite' ? 'Lujo' : h.tipo === 'Doble' ? 'Más popular' : 'Económica',
-      tagSeverity: h.tipo === 'Suite'
-        ? ('warn' as const)
-        : h.tipo === 'Doble'
-          ? ('success' as const)
-          : ('info' as const)
-    }));
+  aplicarFiltros(): void {
+    let r = [...this.todas];
+    if (this.busqueda.trim()) {
+      const q = this.busqueda.toLowerCase();
+      r = r.filter(h => (h.nombre + h.descripcion + h.tipo).toLowerCase().includes(q));
+    }
+    if (this.tipoSel !== 'Todos') r = r.filter(h => h.tipo === this.tipoSel);
+    r = r.filter(h => h.capacidad >= this.huespedesMin && h.precio <= this.precioMax);
+    if (this.soloOfertas) r = r.filter(h => h.precioTachado);
+    switch (this.orden) {
+      case 'precio-asc': r.sort((a, b) => a.precio - b.precio); break;
+      case 'precio-desc': r.sort((a, b) => b.precio - a.precio); break;
+      case 'rating': r.sort((a, b) => (b.rating ?? 0) - (a.rating ?? 0)); break;
+    }
+    this.filtradas = r;
   }
 
-  // ─── MANEJADORES DE EVENTOS DEL HIJO ────────────────────────────
+  limpiar(): void {
+    this.busqueda = ''; this.tipoSel = 'Todos';
+    this.huespedesMin = 1; this.precioMax = 700;
+    this.soloOfertas = false; this.orden = 'recomendado';
+    this.aplicarFiltros();
+  }
 
-  /** Recibe el id emitido por <app-habitacion-card> al hacer clic en "Reservar" */
   onReservar(habitacionId: number): void {
-    // Aquí puedes navegar a la ruta de reserva, abrir un modal, etc.
-    // Ejemplo: this.router.navigate(['/reserva'], { queryParams: { habitacion: habitacionId } });
-    this.messageService.add({
-      severity: 'info',
-      summary: 'Reservar',
-      detail: `Has seleccionado reservar la habitación #${habitacionId}`
-    });
+    this.router.navigate(['/reserva'], { queryParams: { habitacion: habitacionId } });
   }
 
-  /** Recibe la habitación completa emitida por <app-habitacion-card> al ver detalles */
   onVerDetalles(habitacion: HabitacionConTag): void {
-    // El dialog se maneja internamente en HabitacionCardComponent.
-    // Si necesitas lógica adicional en el padre (analytics, log, etc.) ponla aquí.
     console.log('Ver detalles:', habitacion.nombre);
   }
 }
