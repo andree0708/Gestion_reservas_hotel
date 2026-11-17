@@ -1,84 +1,66 @@
-# hotel-front
+# Hotel Tropical — Frontend
 
-Proyecto Angular **puramente de presentación** (front-end only).  
-Extraído y refactorizado desde `angular-proyecto` para separar la maquetación de la lógica de negocio y la conexión con el backend.
+Hotel boutique en Cartagena. Aplicación 100% frontend desarrollada en **Angular 19**
+con componentes standalone y **PrimeNG**. Sin backend: los datos del hotel viven en
+un mock centralizado y lo que el usuario genera (reservas y mensajes) se guarda en
+el navegador con **localStorage**.
 
-## Instalar y correr
+## Requisitos
+
+- Node.js 18 o superior
+- npm 9 o superior
+
+## Cómo correrlo
 
 ```bash
+cd hotel-front
 npm install
-npm start        # http://localhost:4200
+npm start
 ```
 
----
+Abrir http://localhost:4200 en el navegador.
 
-## Estructura del proyecto
+## Páginas y rutas
 
-```
-src/app/
-│
-├── models/                        ← Interfaces TypeScript (contratos de datos)
-│   ├── habitacion.model.ts        ← Habitacion, HabitacionConTag
-│   └── servicio.model.ts          ← Servicio
-│
-├── components/                    ← Componentes reutilizables (dumb/presentación)
-│   ├── layout/                    ← Shell: navbar + sidebar + router-outlet
-│   ├── habitacion-card/           ← Card de habitación con @Input y @Output
-│   └── servicio-card/             ← Card de servicio con @Input
-│
-└── pages/                         ← Páginas (smart components — coordinan datos)
-    ├── home/                      ← Landing con banner y testimonios
-    ├── habitaciones/              ← Grid de habitaciones — usa HabitacionCardComponent
-    ├── servicios/                 ← Grid de servicios — usa ServicioCardComponent
-    └── contacto/                  ← Datos de contacto
-```
+| Ruta            | Página      | Descripción                                              |
+|-----------------|-------------|----------------------------------------------------------|
+| `/`             | Inicio      | Hero, buscador de fechas, destacadas y testimonios       |
+| `/habitaciones` | Habitaciones| Catálogo con filtros, galería y detalles por habitación  |
+| `/servicios`    | Servicios   | Servicios del hotel, horarios y experiencias             |
+| `/galeria`      | Galería     | Mosaico de fotos con lightbox                            |
+| `/reserva`      | Reserva     | Flujo en 3 pasos con código de confirmación              |
+| `/contacto`     | Contacto    | Formulario validado, mapa y preguntas frecuentes         |
 
----
-
-## Patrón de comunicación padre → hijo → padre
+## Estructura (`src/app`)
 
 ```
-HabitacionesComponent (padre / smart)
-  │
-  │  [habitacion]="item"          ← @Input: pasa los datos
-  │  (reservar)="onReservar($event)"    ← @Output: recibe el id
-  │  (verDetalles)="onVerDetalles($event)"  ← @Output: recibe el objeto
-  ▼
-HabitacionCardComponent (hijo / dumb)
-  │── muestra la card visualmente
-  │── maneja el dialog de detalles internamente
-  └── emite eventos al padre sin conocer la lógica de negocio
+components/  → piezas reutilizables (layout, habitacion-card, servicio-card)
+pages/       → pantallas completas (home, habitaciones, servicios, galería, reserva, contacto)
+models/      → interfaces TypeScript (Habitacion, HabitacionConTag, Servicio, Reserva)
+data/        → datos mock centralizados (hotel.data.ts)
+services/    → lógica compartida (reserva.service.ts, persistencia en localStorage)
 ```
 
----
+Regla del proyecto: cada tarjeta se maqueta **una sola vez** y las páginas solo le
+envían información (`@Input`); los eventos suben al padre (`@Output`).
 
-## Cómo conectar el backend en el futuro
+## Datos locales (localStorage)
 
-1. Agrega `provideHttpClient()` en `app.config.ts`
-2. Crea un `HabitacionService` en `src/app/services/`
-3. En `HabitacionesComponent.ngOnInit()` reemplaza los datos mock con la llamada HTTP:
+| Clave                | Contenido                          |
+|----------------------|------------------------------------|
+| `ht_reservas`        | Reservas confirmadas               |
+| `ht_contactos`       | Mensajes del formulario            |
+| `ht_ultima_busqueda` | Última búsqueda del home           |
 
-```typescript
-// Reemplazar esto:
-const dataMock: Habitacion[] = [ ... ];
-this.habitaciones = this.mapearHabitaciones(dataMock);
+Se inspeccionan en DevTools → Application → Local Storage.
 
-// Por esto:
-this.habitacionService.getAll().subscribe(data => {
-  this.habitaciones = this.mapearHabitaciones(data);
-});
-```
+## Flujo de trabajo en git
 
-Los componentes hijos (`HabitacionCardComponent`) **no necesitan ningún cambio**.
+Una rama por funcionalidad (`feature/*`), commits descriptivos en español, pull
+requests hacia `develop` y merge. La rama `main` recibe la integración final
+mediante PR desde `develop`.
 
----
+## Pendiente (con backend futuro)
 
-## Dependencias principales
-
-| Paquete | Versión |
-|---------|---------|
-| Angular | ^19.2.0 |
-| PrimeNG | ^19.1.4 |
-| PrimeIcons | ^7.0.0 |
-| @primeuix/themes (Aura) | ^0.5.0 |
-| RxJS | ~7.8.0 |
+Enviar mensajes y reservas con `HttpClient` (`POST`) a un endpoint real, en lugar
+de `localStorage`. Los servicios ya están separados para que el cambio sea mínimo.
