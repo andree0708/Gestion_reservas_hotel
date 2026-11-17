@@ -1,0 +1,125 @@
+<div class="res-page">
+  <p-toast></p-toast>
+
+  <section class="res-hero">
+    <div class="container-x">
+      <span class="eyebrow eyebrow-claro">Reserva directa · −10% + beneficios</span>
+      <h1>Tu escapada en <em>3 pasos</em></h1>
+      <!-- Stepper -->
+      <div class="steps">
+        <div class="step" [class.on]="paso >= 1" [class.done]="paso > 1"><span>1</span> Habitación y fechas</div>
+        <div class="linea-step" [class.on]="paso > 1"></div>
+        <div class="step" [class.on]="paso >= 2" [class.done]="paso > 2"><span>2</span> Tus datos</div>
+        <div class="linea-step" [class.on]="paso > 2"></div>
+        <div class="step" [class.on]="paso >= 3"><span>3</span> Confirmación</div>
+      </div>
+    </div>
+  </section>
+
+  <div class="container-x res-body">
+
+    <div *ngIf="paso === 1" class="paso1">
+      <div class="fechas-card">
+        <div class="campo-r"><label><i class="pi pi-calendar"></i> Llegada</label>
+          <input type="date" [(ngModel)]="llegada" [min]="minLlegada"></div>
+        <div class="campo-r"><label><i class="pi pi-calendar"></i> Salida</label>
+          <input type="date" [(ngModel)]="salida" [min]="llegada"></div>
+        <div class="campo-r"><label><i class="pi pi-users"></i> Huéspedes</label>
+          <select [(ngModel)]="huespedes">
+            <option [value]="1">1 huésped</option><option [value]="2">2 huéspedes</option>
+            <option [value]="3">3 huéspedes</option><option [value]="4">4 huéspedes</option>
+            <option [value]="5">5</option><option [value]="6">6</option>
+          </select></div>
+        <div class="noches-chip"><strong>{{ noches }}</strong><span>{{ noches === 1 ? 'noche' : 'noches' }}</span></div>
+      </div>
+
+      <div class="hab-opciones">
+        <div class="hab-opcion" *ngFor="let h of habitaciones"
+             [class.sel]="habitacionSel?.id === h.id" (click)="habitacionSel = h">
+          <img [src]="h.imagenUrl" [alt]="h.nombre">
+          <div class="hab-op-info">
+            <div class="hab-op-top"><span class="mini-tag">{{ h.tag }}</span>
+              <span class="mini-rating"><i class="pi pi-star-fill"></i> {{ h.rating }}</span></div>
+            <h3>{{ h.nombre }}</h3>
+            <p>{{ h.capacidad }} huéspedes · {{ h.tamano }} · {{ h.cama }}</p>
+            <div class="hab-op-precio"><strong>${{ h.precio * noches }}</strong><span> {{ noches }} noche(s) · impuestos no incluidos</span></div>
+          </div>
+          <span class="check" *ngIf="habitacionSel?.id === h.id"><i class="pi pi-check"></i></span>
+        </div>
+      </div>
+
+      <div class="paso-acciones">
+        <p *ngIf="!habitacionSel" class="elige-aviso">Selecciona una habitación para continuar</p>
+        <button class="btn-lujo btn-dorado" [disabled]="!fechasValidas()" (click)="irPaso2()">
+          Continuar <i class="pi pi-arrow-right"></i>
+        </button>
+      </div>
+    </div>
+
+    <div *ngIf="paso === 2" class="paso2">
+      <div class="resumen-card">
+        <img *ngIf="habitacionSel" [src]="habitacionSel.imagenUrl" [alt]="habitacionSel.nombre">
+        <div *ngIf="habitacionSel" class="resumen-info">
+          <span class="mini-tag">{{ habitacionSel.tag }}</span>
+          <h3>{{ habitacionSel.nombre }}</h3>
+          <p><i class="pi pi-calendar"></i> {{ formatear(llegada) }} → {{ formatear(salida) }}</p>
+          <p><i class="pi pi-users"></i> {{ huespedes }} huésped(es) · {{ noches }} noche(s)</p>
+          <div class="resumen-total">
+            <div><span>Subtotal</span><span>${{ subtotal }}</span></div>
+            <div><span>Impuestos (8%)</span><span>${{ impuestos }}</span></div>
+            <div class="total"><span>Total estimado</span><strong>${{ total }}</strong></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="datos-card">
+        <h2>¿Quién se hospeda?</h2>
+        <div class="fila-2">
+          <div class="campo-f"><label>Nombre completo *</label>
+            <input type="text" [(ngModel)]="huesped.nombre" placeholder="Ej. Laura Torres"></div>
+          <div class="campo-f"><label>Teléfono / WhatsApp *</label>
+            <input type="tel" [(ngModel)]="huesped.telefono" placeholder="+57 300 000 0000"></div>
+        </div>
+        <div class="campo-f"><label>Correo electrónico *</label>
+          <input type="email" [(ngModel)]="huesped.email" placeholder="tu@correo.com"></div>
+        <div class="campo-f"><label>Peticiones especiales</label>
+          <textarea rows="3" [(ngModel)]="huesped.peticiones" placeholder="Piso alto, cama extra, aniversario, alergias…"></textarea></div>
+        <div class="paso-acciones">
+          <button class="btn-lujo btn-linea" (click)="paso = 1"><i class="pi pi-arrow-left"></i> Atrás</button>
+          <button class="btn-lujo btn-dorado" (click)="confirmar()"><i class="pi pi-check-circle"></i> Confirmar reserva · ${{ total }}</button>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="paso === 3 && confirmada" class="paso3">
+      <div class="exito-card">
+        <span class="exito-ico"><i class="pi pi-check"></i></span>
+        <span class="eyebrow">Reserva confirmada</span>
+        <h2>¡Nos vemos pronto, {{ confirmada.nombreHuesped.split(' ')[0] }}!</h2>
+        <p>Enviamos los detalles a <strong>{{ confirmada.email }}</strong>. Presenta este código al llegar:</p>
+        <div class="codigo">{{ confirmada.codigo }}</div>
+        <div class="exito-detalle">
+          <div><span>Habitación</span><strong>{{ confirmada.habitacionNombre }}</strong></div>
+          <div><span>Check-in</span><strong>{{ formatear(confirmada.llegada) }}</strong></div>
+          <div><span>Check-out</span><strong>{{ formatear(confirmada.salida) }}</strong></div>
+          <div><span>Total estimado</span><strong>${{ confirmada.totalEstimado }}</strong></div>
+        </div>
+        <div class="paso-acciones centro">
+          <button class="btn-lujo btn-selva" (click)="nuevaReserva()">Hacer otra reserva</button>
+          <a routerLink="/" class="btn-lujo btn-linea">Volver al inicio</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Mis reservas -->
+    <div class="mis-reservas" *ngIf="misReservas.length && paso !== 3">
+      <h3><i class="pi pi-wallet"></i> Mis reservas en este dispositivo ({{ misReservas.length }})</h3>
+      <div class="mr-grid">
+        <div class="mr-item" *ngFor="let r of misReservas">
+          <div><strong>{{ r.codigo }}</strong><small>{{ r.habitacionNombre }} · {{ r.noches }} noche(s) · ${{ r.totalEstimado }}</small></div>
+          <button (click)="cancelarReserva(r.codigo)" title="Cancelar reserva"><i class="pi pi-trash"></i></button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
