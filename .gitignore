@@ -3,7 +3,8 @@ node_modules/
 
 # Build outputs
 dist/
-.angular/cache/
+.angular/
+**/.angular/
 
 # Entornos
 .env
