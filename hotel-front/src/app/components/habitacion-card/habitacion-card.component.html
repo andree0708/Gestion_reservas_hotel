@@ -1,66 +1,104 @@
 <p-card class="room-card">
-  <!-- Imagen / cabecera de la card -->
+  <!-- Imagen -->
   <ng-template pTemplate="header">
-    <div class="room-image"
-         [style.background-image]="habitacion.imagenUrl ? 'url(' + habitacion.imagenUrl + ')' : 'none'">
-      <p-tag [value]="habitacion.tag"
-             [severity]="habitacion.tagSeverity"
-             class="room-tag">
-      </p-tag>
-      <div class="room-placeholder" *ngIf="!habitacion.imagenUrl">
-        {{ habitacion.nombre }}
-      </div>
+    <div class="room-media" (click)="onVerDetalles()">
+      <img [src]="habitacion.imagenUrl" [alt]="habitacion.nombre" loading="lazy">
+      <div class="media-sombra"></div>
+      <p-tag [value]="habitacion.tag" [severity]="habitacion.tagSeverity" class="room-tag"></p-tag>
+      <span class="room-tamano" *ngIf="habitacion.tamano"><i class="pi pi-arrows-alt"></i> {{ habitacion.tamano }}</span>
+      <span class="room-precio-flotante" *ngIf="habitacion.precioTachado">
+        -{{ (100 - habitacion.precio * 100 / habitacion.precioTachado) | number:'1.0-0' }}%
+      </span>
     </div>
   </ng-template>
 
   <!-- Cuerpo -->
-  <div class="room-content">
+  <div class="room-body">
+    <div class="room-top">
+      <span class="room-tipo">{{ habitacion.tipo }}</span>
+      <span class="room-rating" *ngIf="habitacion.rating">
+        <i class="pi pi-star-fill"></i> {{ habitacion.rating | number:'1.1-1' }}
+        <small>({{ habitacion.opiniones }})</small>
+      </span>
+    </div>
     <h3 class="room-title">{{ habitacion.nombre }}</h3>
     <p class="room-description">{{ habitacion.descripcion }}</p>
-    <p class="room-price">Desde ${{ habitacion.precio | number:'1.2-2' }} / noche</p>
+
+    <div class="room-meta">
+      <span><i class="pi pi-users"></i> {{ habitacion.capacidad }} huéspedes</span>
+      <span *ngIf="habitacion.cama"><i class="pi pi-moon"></i> {{ habitacion.cama }}</span>
+    </div>
+
+    <div class="room-amenities" *ngIf="habitacion.amenities?.length">
+      <span *ngFor="let a of habitacion.amenities!.slice(0, 4)" [title]="amenidadInfo(a).label">
+        <i class="pi {{ amenidadInfo(a).icon }}"></i>
+      </span>
+    </div>
+
+    <div class="room-foot">
+      <div class="room-precio">
+        <small *ngIf="habitacion.precioTachado" class="tachado">${{ habitacion.precioTachado }}</small>
+        <strong>${{ habitacion.precio }}</strong><span> / noche</span>
+      </div>
+    </div>
   </div>
 
   <!-- Acciones -->
   <ng-template pTemplate="footer">
     <div class="room-actions">
-      <p-button label="Ver detalles"
-                (onClick)="onVerDetalles()"
-                styleClass="details-button"
-                [text]="true">
-      </p-button>
-      <p-button label="Reservar"
-                (onClick)="onReservar()"
-                styleClass="reserve-room-button">
-      </p-button>
+      <button class="btn-lujo btn-linea btn-mitad" (click)="onVerDetalles()">
+        <i class="pi pi-eye"></i> Detalles
+      </button>
+      <button class="btn-lujo btn-selva btn-mitad" (click)="onReservar()">
+        Reservar <i class="pi pi-arrow-right"></i>
+      </button>
     </div>
   </ng-template>
 </p-card>
 
-<!-- Dialog de detalles — autónomo dentro del componente -->
-<p-dialog [(visible)]="detalleVisible"
-          [modal]="true"
-          [style]="{width: '450px'}"
-          [header]="habitacion.nombre">
-  <div class="detalle-content">
-    <p class="detalle-descripcion">{{ habitacion.descripcion }}</p>
-    <p class="detalle-precio">
-      <strong>Precio por noche:</strong> ${{ habitacion.precio | number:'1.2-2' }}
-    </p>
-    <p class="detalle-capacidad">
-      <strong>Capacidad:</strong> {{ habitacion.capacidad }} persona(s)
-    </p>
-    <p class="detalle-tipo">
-      <strong>Tipo:</strong> {{ habitacion.tipo }}
-    </p>
+<!-- Dialog de detalles con galería -->
+<p-dialog [(visible)]="detalleVisible" [modal]="true" [style]="{width: 'min(680px, 94vw)'}"
+          [header]="habitacion.nombre" styleClass="dialog-hab">
+  <div class="detalle-galeria">
+    <img [src]="fotos[fotoActiva]" [alt]="habitacion.nombre">
+    <button class="gal-nav izq" *ngIf="fotos.length > 1"
+            (click)="fotoActiva = (fotoActiva - 1 + fotos.length) % fotos.length"><i class="pi pi-chevron-left"></i></button>
+    <button class="gal-nav der" *ngIf="fotos.length > 1"
+            (click)="fotoActiva = (fotoActiva + 1) % fotos.length"><i class="pi pi-chevron-right"></i></button>
+    <div class="gal-puntos" *ngIf="fotos.length > 1">
+      <span *ngFor="let f of fotos; let i = index" [class.on]="i === fotoActiva" (click)="fotoActiva = i"></span>
+    </div>
   </div>
-  <ng-template pTemplate="footer">
-    <p-button label="Cerrar"
-              (onClick)="detalleVisible = false"
-              [text]="true">
-    </p-button>
-    <p-button label="Reservar"
-              (onClick)="onReservar(); detalleVisible = false"
-              styleClass="reserve-room-button">
-    </p-button>
-  </ng-template>
+
+  <div class="detalle-body">
+    <div class="detalle-rating">
+      <p-rating [(ngModel)]="estrellas" [readonly]="true"></p-rating>
+      <span>{{ habitacion.rating }} · {{ habitacion.opiniones }} opiniones verificadas</span>
+    </div>
+    <p class="detalle-desc">{{ habitacion.descripcionLarga || habitacion.descripcion }}</p>
+
+    <div class="detalle-datos">
+      <div><i class="pi pi-tag"></i><span><strong>Tipo</strong>{{ habitacion.tipo }}</span></div>
+      <div><i class="pi pi-users"></i><span><strong>Capacidad</strong>{{ habitacion.capacidad }} personas</span></div>
+      <div><i class="pi pi-arrows-alt"></i><span><strong>Tamaño</strong>{{ habitacion.tamano || '—' }}</span></div>
+      <div><i class="pi pi-moon"></i><span><strong>Cama</strong>{{ habitacion.cama || '—' }}</span></div>
+    </div>
+
+    <h4>Amenidades incluidas</h4>
+    <div class="detalle-amenities">
+      <span *ngFor="let a of habitacion.amenities || []">
+        <i class="pi {{ amenidadInfo(a).icon }}"></i> {{ amenidadInfo(a).label }}
+      </span>
+    </div>
+
+    <div class="detalle-precio-box">
+      <div>
+        <small *ngIf="habitacion.precioTachado" class="tachado">${{ habitacion.precioTachado }} / noche</small>
+        <div class="gran-precio">${{ habitacion.precio }} <span>/ noche · impuestos incluidos</span></div>
+      </div>
+      <button class="btn-lujo btn-dorado" (click)="onReservar(); detalleVisible = false">
+        Reservar ahora
+      </button>
+    </div>
+  </div>
 </p-dialog>

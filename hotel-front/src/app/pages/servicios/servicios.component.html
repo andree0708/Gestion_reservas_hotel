@@ -1,17 +1,39 @@
-<div class="servicios-container">
-  <div class="servicios-section">
-    <h1 class="section-title">Servicios Adicionales</h1>
-    <p class="section-subtitle">Aprovecha nuestros excelentes servicios durante tu estancia.</p>
+<div class="serv-page">
+  <!-- Encabezado -->
+  <section class="serv-hero">
+    <div class="container-x">
+      <span class="eyebrow eyebrow-claro">Servicios & Experiencias</span>
+      <h1>Todo el Caribe,<br><em>sin salir del hotel</em></h1>
+      <p>Seis espacios para comer, descansar, entrenar y celebrar. La mayoría incluidos en tu estadía.</p>
+    </div>
+  </section>
 
-    <!--
-      El padre itera el array y pasa cada servicio al componente hijo.
-      ServicioCardComponent solo muestra la información — sin lógica adicional.
-    -->
+  <div class="container-x">
     <div class="servicios-grid">
-      <app-servicio-card
-        *ngFor="let servicio of servicios"
-        [servicio]="servicio">
-      </app-servicio-card>
+      <app-servicio-card *ngFor="let s of servicios" [servicio]="s"></app-servicio-card>
+    </div>
+
+    <!-- Horarios -->
+    <div class="horarios">
+      <div class="hor-cabeza center">
+        <span class="eyebrow">Planifica tu día</span>
+        <h2 class="section-title">Horarios de la casa</h2>
+      </div>
+      <div class="hor-grid">
+        <div class="hor-item" *ngFor="let h of horarios">
+          <span class="hor-ico"><i class="pi {{ h.icon }}"></i></span>
+          <div><strong>{{ h.lugar }}</strong><p>{{ h.hora }}</p></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CTA -->
+    <div class="serv-cta">
+      <div>
+        <h2>¿Antojo de algo especial?</h2>
+        <p>Cena privada en la playa, masaje en pareja o yate al atardecer. Lo organizamos por ti.</p>
+      </div>
+      <a routerLink="/contacto" class="btn-lujo btn-dorado"><i class="pi pi-envelope"></i> Pedir experiencia a medida</a>
     </div>
   </div>
 </div>

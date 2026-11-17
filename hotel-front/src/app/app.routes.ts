@@ -19,6 +19,14 @@ export const routes: Routes = [
         loadComponent: () => import('./pages/servicios/servicios.component').then(m => m.ServiciosComponent)
       },
       {
+        path: 'galeria',
+        loadComponent: () => import('./pages/galeria/galeria.component').then(m => m.GaleriaComponent)
+      },
+      {
+        path: 'reserva',
+        loadComponent: () => import('./pages/reserva/reserva.component').then(m => m.ReservaComponent)
+      },
+      {
         path: 'contacto',
         loadComponent: () => import('./pages/contacto/contacto.component').then(m => m.ContactoComponent)
       },

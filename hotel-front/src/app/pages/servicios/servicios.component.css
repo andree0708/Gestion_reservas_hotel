@@ -1,41 +1,35 @@
-.servicios-container {
-  width: 100%;
-  max-width: 1200px;
-  margin: 0 auto;
+.serv-page { padding-bottom: 4rem; }
+.serv-hero { background: linear-gradient(135deg, var(--selva-950) 40%, var(--selva-700)); padding: 4rem 0 3.5rem; }
+.serv-hero h1 { color: #fff; font-size: clamp(2.2rem, 5vw, 3.6rem); margin: .7rem 0 .6rem; }
+.serv-hero h1 em { color: var(--dorado-300); font-style: italic; }
+.serv-hero p { color: #b9d2c5; max-width: 560px; }
+.eyebrow-claro { color: var(--dorado-300); }
+
+.servicios-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.6rem; margin-top: -2.2rem; position: relative; z-index: 2; }
+
+.horarios { margin-top: 4rem; background: #fff; border: 1px solid var(--linea); border-radius: var(--radio-l); padding: 3rem; box-shadow: var(--sombra-sm); }
+.hor-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-top: 2rem; }
+.hor-item { display: flex; gap: 1rem; align-items: center; padding: 1rem 1.2rem; background: var(--crema-100); border-radius: 14px; border: 1px solid var(--linea); }
+.hor-ico { width: 48px; height: 48px; border-radius: 14px; background: var(--selva-900); color: var(--dorado-300); display: flex; align-items: center; justify-content: center; font-size: 1.2rem; flex-shrink: 0; }
+.hor-item strong { color: var(--selva-950); display: block; }
+.hor-item p { color: var(--tinta-suave); font-size: .88rem; }
+
+.serv-cta {
+  margin-top: 2.5rem; border-radius: var(--radio-l);
+  background: linear-gradient(120deg, var(--dorado-600), var(--dorado-500));
+  padding: 2.8rem 3rem; display: flex; align-items: center; justify-content: space-between; gap: 1.5rem; flex-wrap: wrap;
+  box-shadow: var(--sombra-md);
 }
+.serv-cta h2 { color: #fff; font-size: 2rem; }
+.serv-cta p { color: rgba(255,255,255,.85); }
+.serv-cta .btn-dorado { background: var(--selva-950); box-shadow: none; }
 
-.servicios-section {
-  margin-bottom: 4rem;
+@media (max-width: 960px) {
+  .servicios-grid { grid-template-columns: 1fr 1fr; }
+  .hor-grid { grid-template-columns: 1fr 1fr; }
 }
-
-.section-title {
-  color: var(--cafe-oscuro);
-  font-size: 2.5rem;
-  font-weight: bold;
-  text-align: center;
-  margin-bottom: 1rem;
-}
-
-.section-subtitle {
-  color: var(--cafe-oscuro);
-  font-size: 1.1rem;
-  text-align: center;
-  margin-bottom: 2rem;
-}
-
-.servicios-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
-  gap: 2rem;
-  margin-top: 2rem;
-}
-
-@media (max-width: 768px) {
-  .servicios-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .section-title {
-    font-size: 2rem;
-  }
+@media (max-width: 640px) {
+  .servicios-grid, .hor-grid { grid-template-columns: 1fr; }
+  .horarios { padding: 2rem 1.3rem; }
+  .serv-cta { padding: 2rem 1.5rem; }
 }

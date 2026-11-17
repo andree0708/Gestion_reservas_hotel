@@ -1,45 +1,23 @@
-.servicio-card {
-  background: white;
-  border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+.serv-card { height: 100%; overflow: hidden; transition: transform .35s ease, box-shadow .35s ease; }
+.serv-card:hover { transform: translateY(-8px); box-shadow: var(--sombra-lg) !important; }
+.serv-media { position: relative; height: 210px; overflow: hidden; margin: -1.25rem -1.25rem 0; }
+.serv-media img { width: 100%; height: 100%; object-fit: cover; transition: transform .8s ease; }
+.serv-card:hover .serv-media img { transform: scale(1.09); }
+.serv-velo { position: absolute; inset: 0; background: linear-gradient(to top, rgba(11,43,34,.45), transparent 55%); }
+.serv-etiqueta {
+  position: absolute; top: 12px; left: 12px;
+  background: rgba(255,255,255,.92); color: var(--selva-900);
+  font-size: .72rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase;
+  padding: .35rem .8rem; border-radius: 999px;
 }
-
-.servicio-content {
-  display: flex;
-  gap: 1.5rem;
-  align-items: center;
+.serv-icono {
+  position: absolute; bottom: -24px; right: 16px;
+  width: 52px; height: 52px; border-radius: 16px;
+  background: linear-gradient(135deg, var(--dorado-500), var(--dorado-600));
+  color: #fff; display: flex; align-items: center; justify-content: center;
+  font-size: 1.3rem; box-shadow: var(--sombra-md);
 }
-
-.servicio-image {
-  width: 120px;
-  height: 120px;
-  background: var(--gris-claro);
-  background-size: cover;
-  background-position: center;
-  border-radius: 8px;
-  flex-shrink: 0;
-}
-
-.servicio-text {
-  flex: 1;
-}
-
-.servicio-titulo {
-  color: var(--cafe-oscuro);
-  font-size: 1.3rem;
-  font-weight: bold;
-  margin-bottom: 0.5rem;
-}
-
-.servicio-descripcion {
-  color: var(--cafe-oscuro);
-  margin: 0;
-  line-height: 1.5;
-}
-
-@media (max-width: 600px) {
-  .servicio-content {
-    flex-direction: column;
-    text-align: center;
-  }
-}
+.serv-body { padding: 1.6rem .25rem .3rem; }
+.serv-body h3 { font-size: 1.5rem; color: var(--selva-950); margin-bottom: .4rem; }
+.serv-body p { color: var(--tinta-suave); font-size: .93rem; line-height: 1.6; }
+.serv-horario { margin-top: .9rem; display: inline-flex; align-items: center; gap: .45rem; font-size: .83rem; font-weight: 600; color: var(--selva-700); background: var(--selva-100); padding: .4rem .9rem; border-radius: 999px; }

@@ -1,0 +1,29 @@
+<div class="gal-page">
+  <section class="gal-hero">
+    <div class="container-x">
+      <span class="eyebrow eyebrow-claro">Galería</span>
+      <h1>Postales del <em>Caribe</em></h1>
+      <p>Toca cualquier foto para verla en grande.</p>
+    </div>
+  </section>
+
+  <div class="container-x gal-grid">
+    <figure class="g-item" *ngFor="let f of fotos; let i = index" (click)="abrir(i)" [class.alta]="i % 5 === 0">
+      <img [src]="f.src" [alt]="f.titulo" loading="lazy">
+      <figcaption><i class="pi pi-search-plus"></i> {{ f.titulo }}</figcaption>
+    </figure>
+  </div>
+
+  <div class="container-x center cta-gal">
+    <a routerLink="/reserva" class="btn-lujo btn-dorado">Quiero vivirlo en persona <i class="pi pi-arrow-right"></i></a>
+  </div>
+
+  <!-- Lightbox -->
+  <div class="lightbox" *ngIf="activa !== null" (click)="cerrar()">
+    <button class="lb-cerrar" (click)="cerrar()"><i class="pi pi-times"></i></button>
+    <button class="lb-nav izq" (click)="$event.stopPropagation(); mover(-1)"><i class="pi pi-chevron-left"></i></button>
+    <img [src]="fotos[activa].src" [alt]="fotos[activa].titulo" (click)="$event.stopPropagation()">
+    <button class="lb-nav der" (click)="$event.stopPropagation(); mover(1)"><i class="pi pi-chevron-right"></i></button>
+    <p class="lb-titulo">{{ activa + 1 }} / {{ fotos.length }} · {{ fotos[activa].titulo }}</p>
+  </div>
+</div>

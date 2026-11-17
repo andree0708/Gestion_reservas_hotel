@@ -1,41 +1,79 @@
-<div class="contacto-container">
-  <div class="contacto-header">
-    <h1 class="section-title">Contáctanos</h1>
-    <p class="section-subtitle">Estamos aquí para ayudarte. Ponte en contacto con nosotros.</p>
+<div class="cont-page">
+  <p-toast></p-toast>
+
+  <section class="cont-hero">
+    <div class="container-x">
+      <span class="eyebrow eyebrow-claro">Contacto</span>
+      <h1>Hablemos de tu<br><em>próxima escapada</em></h1>
+      <p>Respondemos en menos de 2 horas · WhatsApp, correo o este formulario.</p>
+    </div>
+  </section>
+
+  <div class="container-x cont-grid">
+    <!-- Formulario -->
+    <p-card class="cont-form-card">
+      <h2>Escríbenos</h2>
+      <p class="form-sub">Cuéntanos fechas, ocasión especial o cualquier duda.</p>
+      <form (ngSubmit)="enviar()" class="form">
+        <div class="fila-2">
+          <div class="campo-f">
+            <label>Nombre completo *</label>
+            <input type="text" [(ngModel)]="form.nombre" name="nombre" placeholder="Ej. Laura Torres">
+          </div>
+          <div class="campo-f">
+            <label>Correo electrónico *</label>
+            <input type="email" [(ngModel)]="form.email" name="email" placeholder="tu@correo.com">
+          </div>
+        </div>
+        <div class="campo-f">
+          <label>Asunto</label>
+          <select [(ngModel)]="form.asunto" name="asunto">
+            <option>Reserva / disponibilidad</option>
+            <option>Evento o boda</option>
+            <option>Experiencia a medida</option>
+            <option>Prensa / alianzas</option>
+            <option>Otro tema</option>
+          </select>
+        </div>
+        <div class="campo-f">
+          <label>Mensaje *</label>
+          <textarea rows="5" [(ngModel)]="form.mensaje" name="mensaje" placeholder="Hola, quiero celebrar mi aniversario del 14 al 17 de febrero…"></textarea>
+        </div>
+        <button type="submit" class="btn-lujo btn-dorado btn-enviar">
+          <i class="pi" [ngClass]="enviado ? 'pi-check-circle' : 'pi-send'"></i>
+          {{ enviado ? '¡Mensaje enviado!' : 'Enviar mensaje' }}
+        </button>
+        <small class="priv">Al enviar aceptas nuestra política de privacidad. Nunca compartimos tus datos.</small>
+      </form>
+    </p-card>
+
+    <!-- Info + mapa -->
+    <div class="cont-lado">
+      <div class="info-cards">
+        <div class="info-item"><span><i class="pi pi-map-marker"></i></span><div><h4>Dirección</h4><p>{{ contacto.direccion }}</p></div></div>
+        <div class="info-item"><span><i class="pi pi-phone"></i></span><div><h4>Teléfono / WhatsApp</h4><p>{{ contacto.telefono }}</p></div></div>
+        <div class="info-item"><span><i class="pi pi-envelope"></i></span><div><h4>Email</h4><p>{{ contacto.email }}</p></div></div>
+        <div class="info-item"><span><i class="pi pi-clock"></i></span><div><h4>Horario</h4><p>{{ contacto.horario }}</p></div></div>
+      </div>
+      <div class="mapa">
+        <iframe [src]="mapaUrl" title="Mapa Hotel Tropical" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+      </div>
+    </div>
   </div>
 
-  <div class="contacto-content">
-    <p-card class="contacto-card">
-      <div class="contacto-info">
-        <div class="contacto-item">
-          <i class="pi pi-map-marker"></i>
-          <div>
-            <h4>Dirección</h4>
-            <p>{{ contacto.direccion }}</p>
-          </div>
-        </div>
-        <div class="contacto-item">
-          <i class="pi pi-phone"></i>
-          <div>
-            <h4>Teléfono</h4>
-            <p>{{ contacto.telefono }}</p>
-          </div>
-        </div>
-        <div class="contacto-item">
-          <i class="pi pi-envelope"></i>
-          <div>
-            <h4>Email</h4>
-            <p>{{ contacto.email }}</p>
-          </div>
-        </div>
-        <div class="contacto-item">
-          <i class="pi pi-clock"></i>
-          <div>
-            <h4>Horario de Atención</h4>
-            <p>{{ contacto.horario }}</p>
-          </div>
-        </div>
+  <!-- FAQ -->
+  <div class="container-x faq">
+    <div class="center">
+      <span class="eyebrow">Preguntas frecuentes</span>
+      <h2 class="section-title">¿Dudas? Te ayudamos</h2>
+    </div>
+    <div class="faq-lista">
+      <div class="faq-item" *ngFor="let f of faqs; let i = index" [class.abierto]="f.abierto">
+        <button class="faq-q" (click)="toggleFaq(i)">
+          {{ f.q }} <i class="pi" [ngClass]="f.abierto ? 'pi-chevron-up' : 'pi-chevron-down'"></i>
+        </button>
+        <p class="faq-a" *ngIf="f.abierto">{{ f.a }}</p>
       </div>
-    </p-card>
+    </div>
   </div>
 </div>
