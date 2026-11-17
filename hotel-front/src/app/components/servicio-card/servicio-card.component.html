@@ -1,11 +1,15 @@
-<p-card class="servicio-card">
-  <div class="servicio-content">
-    <div class="servicio-image"
-         [style.background-image]="'url(' + servicio.imagen + ')'">
-    </div>
-    <div class="servicio-text">
-      <h3 class="servicio-titulo">{{ servicio.titulo }}</h3>
-      <p class="servicio-descripcion">{{ servicio.descripcion }}</p>
+<p-card class="serv-card">
+  <div class="serv-media">
+    <img [src]="servicio.imagen" [alt]="servicio.titulo" loading="lazy">
+    <div class="serv-velo"></div>
+    <span class="serv-etiqueta" *ngIf="servicio.etiqueta">{{ servicio.etiqueta }}</span>
+    <span class="serv-icono" *ngIf="servicio.icono"><i class="pi {{ servicio.icono }}"></i></span>
+  </div>
+  <div class="serv-body">
+    <h3>{{ servicio.titulo }}</h3>
+    <p>{{ servicio.descripcion }}</p>
+    <div class="serv-horario" *ngIf="servicio.horario">
+      <i class="pi pi-clock"></i> {{ servicio.horario }}
     </div>
   </div>
 </p-card>
