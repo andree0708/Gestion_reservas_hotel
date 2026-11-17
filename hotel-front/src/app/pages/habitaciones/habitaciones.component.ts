@@ -41,17 +41,17 @@ export class HabitacionesComponent implements OnInit {
         precio: 150,
         capacidad: 4,
         disponible: true,
-        imagenUrl: ''
+        imagenUrl: 'https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=400&h=300&fit=crop'
       },
       {
         id: 2,
-        nombre: 'Suite',
+        nombre: 'Suite Presidencial',
         tipo: 'Suite',
-        descripcion: 'Suite de lujo con vista panorámica, jacuzzi privado y servicio VIP.',
+        descripcion: 'Suite de lujo con vista panorámica al mar, jacuzzi privado y servicio VIP las 24 horas.',
         precio: 300,
         capacidad: 2,
         disponible: true,
-        imagenUrl: ''
+        imagenUrl: 'https://images.unsplash.com/photo-1618773928121-c32242e63f39?w=400&h=300&fit=crop'
       },
       {
         id: 3,
@@ -61,7 +61,17 @@ export class HabitacionesComponent implements OnInit {
         precio: 80,
         capacidad: 1,
         disponible: true,
-        imagenUrl: ''
+        imagenUrl: 'https://images.unsplash.com/photo-1505693314120-0d443867891c?w=400&h=300&fit=crop'
+      },
+      {
+        id: 4,
+        nombre: 'Habitación Familiar',
+        tipo: 'Familiar',
+        descripcion: 'Espaciosa habitación para toda la familia con dos camas dobles y zona de juegos.',
+        precio: 200,
+        capacidad: 6,
+        disponible: true,
+        imagenUrl: 'https://images.unsplash.com/photo-1596701062351-8ac031a0a713?w=400&h=300&fit=crop'
       }
     ];
 
