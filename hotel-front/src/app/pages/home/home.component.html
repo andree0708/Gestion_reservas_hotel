@@ -1,47 +1,159 @@
-<div class="home-container">
-  <!-- Banner principal -->
-  <div class="banner-section">
-    <div class="banner-content">
-      <h1 class="banner-title">Disfruta de una estancia maravillosa</h1>
-      <p class="banner-description">
-        Elige tu habitación ideal en nuestro hotel con un ambiente acogedor y servicios incomparables.
+<div class="home">
+  <p-toast></p-toast>
+
+  <section class="hero" [style.background-image]="'url(' + heroImg + ')'">
+    <div class="hero-velo"></div>
+    <div class="container-x hero-contenido">
+      <span class="eyebrow eyebrow-claro anim-subir">Cartagena · Frente al mar Caribe</span>
+      <h1 class="hero-titulo anim-subir d1">Donde el Caribe<br><em>se vuelve hogar</em></h1>
+      <p class="hero-sub anim-subir d2">
+        Suites con jacuzzi al atardecer, gastronomía de autor y una playa privada
+        a 10 minutos del centro histórico.
       </p>
-      <div class="banner-buttons">
-        <p-button label="Contáctanos"
-                  routerLink="/contacto"
-                  [outlined]="true"
-                  styleClass="contact-button">
-        </p-button>
-        <p-button label="Ver Habitaciones"
-                  routerLink="/habitaciones"
-                  styleClass="rooms-button">
-        </p-button>
+      <div class="hero-cta anim-subir d3">
+        <a routerLink="/reserva" class="btn-lujo btn-dorado"><i class="pi pi-calendar-plus"></i> Reservar mi escapada</a>
+        <a routerLink="/habitaciones" class="btn-lujo btn-fantasma"><i class="pi pi-building"></i> Ver habitaciones</a>
+      </div>
+
+      <!-- Buscador -->
+      <form class="buscador anim-subir d4" (ngSubmit)="buscar()">
+        <div class="campo">
+          <label><i class="pi pi-calendar"></i> Llegada</label>
+          <input type="date" [(ngModel)]="llegada" name="llegada" [min]="llegada">
+        </div>
+        <div class="campo">
+          <label><i class="pi pi-calendar"></i> Salida</label>
+          <input type="date" [(ngModel)]="salida" name="salida" [min]="llegada">
+        </div>
+        <div class="campo">
+          <label><i class="pi pi-users"></i> Huéspedes</label>
+          <select [(ngModel)]="huespedes" name="huespedes">
+            <option [value]="1">1 huésped</option>
+            <option [value]="2">2 huéspedes</option>
+            <option [value]="3">3 huéspedes</option>
+            <option [value]="4">4 huéspedes</option>
+            <option [value]="5">5+ huéspedes</option>
+          </select>
+        </div>
+        <button type="submit" class="btn-lujo btn-dorado btn-buscar">
+          <i class="pi pi-search"></i> Buscar
+        </button>
+      </form>
+    </div>
+    <div class="hero-cinta">
+      <span><i class="pi pi-check-circle"></i> Cancela gratis hasta 48h antes</span>
+      <span><i class="pi pi-check-circle"></i> Mejor precio garantizado</span>
+      <span><i class="pi pi-check-circle"></i> Desayuno incluido</span>
+    </div>
+  </section>
+
+  <section class="container-x stats">
+    <div class="stat" *ngFor="let s of stats">
+      <span class="stat-icon"><i class="pi {{ s.icon }}"></i></span>
+      <div><strong>{{ s.valor }}<small>{{ s.sufijo }}</small></strong><p>{{ s.etiqueta }}</p></div>
+    </div>
+  </section>
+
+  <section class="container-x seccion">
+    <div class="seccion-cabeza">
+      <div>
+        <span class="eyebrow">Nuestras habitaciones</span>
+        <h2 class="section-title">Espacios que abrazan</h2>
+        <p class="section-subtitle">De refugios íntimos a la suite presidencial con piscina infinita privada.</p>
+      </div>
+      <a routerLink="/habitaciones" class="btn-lujo btn-linea">Ver las 6 habitaciones <i class="pi pi-arrow-right"></i></a>
+    </div>
+    <div class="grid-3">
+      <app-habitacion-card *ngFor="let h of destacadas" [habitacion]="h"
+        (reservar)="onReservar($event)" (verDetalles)="onVerDetalles($event)"></app-habitacion-card>
+    </div>
+  </section>
+
+  <section class="experiencia">
+    <div class="container-x exp-grid">
+      <div class="exp-imagenes">
+        <img [src]="lobbyImg" alt="Lobby Hotel Tropical" class="img-a">
+        <img [src]="playaImg" alt="Playa privada" class="img-b">
+        <div class="exp-sello"><strong>26</strong><span>años de<br>historia</span></div>
+      </div>
+      <div class="exp-texto">
+        <span class="eyebrow">La experiencia Tropical</span>
+        <h2 class="section-title">Más que un hotel,<br>una casa frente al mar</h2>
+        <p>Nacimos en una casona republicana de 1890 y crecimos entre palmas y buganvilias hasta convertirnos en el boutique mejor valorado de la ciudad. Aquí no hay prisa: hay hamacas, brisa y café recién colado.</p>
+        <ul class="exp-lista">
+          <li><i class="pi pi-check-circle"></i> Playa privada con traslados cada 30 min</li>
+          <li><i class="pi pi-check-circle"></i> Gastronomía caribeña de autor</li>
+          <li><i class="pi pi-check-circle"></i> Spa, yoga al amanecer y piscina infinita</li>
+        </ul>
+        <div class="exp-botones">
+          <a routerLink="/servicios" class="btn-lujo btn-selva">Descubrir servicios</a>
+          <a routerLink="/galeria" class="btn-lujo btn-linea"><i class="pi pi-images"></i> Galería</a>
+        </div>
       </div>
     </div>
-  </div>
+  </section>
 
-  <!-- Testimonios -->
-  <div class="testimonios-section">
-    <div class="testimonios-header">
-      <h2 class="section-title">Lo que dicen nuestros huéspedes</h2>
-      <p class="section-subtitle">Lee las opiniones de aquellos que se han alojado con nosotros</p>
+  <section class="container-x seccion">
+    <div class="center">
+      <span class="eyebrow">Servicios incluidos</span>
+      <h2 class="section-title">Todo pensado para ti</h2>
+      <p class="section-subtitle">Seis espacios para comer, descansar, entrenar y celebrar el Caribe.</p>
     </div>
+    <div class="grid-3 margen-top">
+      <app-servicio-card *ngFor="let s of serviciosPreview" [servicio]="s"></app-servicio-card>
+    </div>
+    <div class="center margen-top">
+      <a routerLink="/servicios" class="btn-lujo btn-dorado">Explorar todos los servicios <i class="pi pi-arrow-right"></i></a>
+    </div>
+  </section>
 
-    <div class="testimonios-grid">
-      <p-card *ngFor="let testimonio of testimonios" class="testimonio-card">
-        <div class="testimonio-content">
-          <div class="testimonio-header">
-            <div class="testimonio-avatar">
-              <i class="pi pi-user"></i>
-            </div>
-            <div class="testimonio-info">
-              <h4 class="testimonio-nombre">{{ testimonio.nombre }}</h4>
-              <p-rating [(ngModel)]="testimonio.rating" [readonly]="true"></p-rating>
-            </div>
-          </div>
-          <p class="testimonio-comentario">{{ testimonio.comentario }}</p>
+  <section class="banda-selva">
+    <div class="container-x">
+      <div class="center">
+        <span class="eyebrow eyebrow-claro">Solo en Hotel Tropical</span>
+        <h2 class="section-title titulo-claro">Experiencias que no se olvidan</h2>
+      </div>
+      <div class="grid-4 margen-top">
+        <div class="exp-card" *ngFor="let e of experiencias">
+          <span class="exp-ico"><i class="pi {{ e.icon }}"></i></span>
+          <h3>{{ e.titulo }}</h3>
+          <p>{{ e.texto }}</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="container-x seccion">
+    <div class="center">
+      <span class="eyebrow">Testimonios</span>
+      <h2 class="section-title">Lo que dicen nuestros huéspedes</h2>
+      <p class="section-subtitle">4.9/5 en más de 2.400 opiniones verificadas.</p>
+    </div>
+    <div class="grid-3 margen-top">
+      <p-card *ngFor="let t of testimonios" class="testi">
+        <div class="testi-estrellas">
+          <p-rating [(ngModel)]="t.rating" [readonly]="true"></p-rating>
+        </div>
+        <p class="testi-texto">“{{ t.comentario }}”</p>
+        <div class="testi-pie">
+          <span class="testi-avatar">{{ t.inicial }}</span>
+          <div><strong>{{ t.nombre }}</strong><small>{{ t.origen }}</small></div>
         </div>
       </p-card>
     </div>
-  </div>
+  </section>
+
+  <section class="container-x">
+    <div class="cta-final">
+      <div>
+        <span class="eyebrow eyebrow-claro">Reserva directa = beneficios</span>
+        <h2>Tu hamaca frente al mar<br>te está esperando</h2>
+        <p>10% de descuento + cóctel de bienvenida + late check-out reservando aquí.</p>
+      </div>
+      <div class="cta-botones">
+        <a routerLink="/reserva" class="btn-lujo btn-dorado"><i class="pi pi-calendar-plus"></i> Reservar ahora</a>
+        <a routerLink="/contacto" class="btn-lujo btn-fantasma"><i class="pi pi-phone"></i> Hablar con nosotros</a>
+      </div>
+    </div>
+  </section>
 </div>
