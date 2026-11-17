@@ -1,6 +1,5 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterLink } from '@angular/router';
 import { CardModule } from 'primeng/card';
 import { ButtonModule } from 'primeng/button';
 import { TagModule } from 'primeng/tag';
@@ -16,7 +15,7 @@ import { AMENITY_LABELS } from '../../data/hotel.data';
  */
 @Component({
   selector: 'app-habitacion-card',
-  imports: [CommonModule, RouterLink, CardModule, ButtonModule, TagModule, DialogModule, RatingModule, FormsModule],
+  imports: [CommonModule, CardModule, ButtonModule, TagModule, DialogModule, RatingModule, FormsModule],
   templateUrl: './habitacion-card.component.html',
   styleUrl: './habitacion-card.component.css'
 })

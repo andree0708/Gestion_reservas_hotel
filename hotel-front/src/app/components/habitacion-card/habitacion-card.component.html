@@ -49,7 +49,7 @@
       <button class="btn-lujo btn-linea btn-mitad" (click)="onVerDetalles()">
         <i class="pi pi-eye"></i> Detalles
       </button>
-      <button class="btn-lujo btn-selva btn-mitad" [routerLink]="['/reserva']" [queryParams]="{habitacion: habitacion.id}">
+      <button class="btn-lujo btn-selva btn-mitad" (click)="onReservar()">
         Reservar <i class="pi pi-arrow-right"></i>
       </button>
     </div>
@@ -96,7 +96,7 @@
         <small *ngIf="habitacion.precioTachado" class="tachado">${{ habitacion.precioTachado }} / noche</small>
         <div class="gran-precio">${{ habitacion.precio }} <span>/ noche · impuestos incluidos</span></div>
       </div>
-      <button class="btn-lujo btn-dorado" [routerLink]="['/reserva']" [queryParams]="{habitacion: habitacion.id}" (click)="detalleVisible = false">
+      <button class="btn-lujo btn-dorado" (click)="onReservar(); detalleVisible = false">
         Reservar ahora
       </button>
     </div>
